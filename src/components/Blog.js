@@ -1,18 +1,17 @@
-import { useState } from "react"
+import { useState } from 'react'
+import PropTypes from 'prop-types'
 
 const Blog = ({ blog, like, deleteBlog, user }) => {
-  console.log("blog", blog)
-  console.log("user", user)
   const [visible, setVisible] = useState(false)
 
-  const blogStyle = { border: "solid 1px", padding: "10px", margin: "20px" }
+  const blogStyle = { border: 'solid 1px', padding: '10px', margin: '20px' }
 
   const handleLike = () => {
     const newBlog = {
       ...blog,
-      likes: blog.likes + 1,
+      likes: blog.likes + 1
     }
-   
+
     like(newBlog)
   }
 
@@ -24,16 +23,16 @@ const Blog = ({ blog, like, deleteBlog, user }) => {
 
   return (
     <div style={blogStyle} >
-      
+
       {/* blog tittle and view button */}
-      <div className="blog-title" >
+      <div className='blog-title' >
         {blog.title} by <em>{blog.author}</em>
         <button onClick={() => setVisible(!visible)}>
-          {visible ? "hide" : "view"}
+          {visible ? 'hide' : 'view'}
         </button>
       </div>
       {visible && (
-        <div className="blog-details">
+        <div className='blog-details'>
           {/* blog url */}
           <div>{blog.url}</div>
 
@@ -43,7 +42,7 @@ const Blog = ({ blog, like, deleteBlog, user }) => {
           </div>
 
           <div>Added by {blog.user.name}</div>
-          
+
           {/* remove btn */}
           {user && user.username === blog.user.username && (
             <button onClick={handleDelete}>remove</button>
@@ -52,6 +51,13 @@ const Blog = ({ blog, like, deleteBlog, user }) => {
       )}
     </div>
   )
+}
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  like: PropTypes.func.isRequired,
+  deleteBlog: PropTypes.func.isRequired,
+  user: PropTypes.object
 }
 
 export default Blog
