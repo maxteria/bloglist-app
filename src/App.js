@@ -6,13 +6,14 @@ import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import Footer from './components/Footer'
+import Notification from './components/Notifications'
 
 function App () {
   const [blogs, setBlogs] = useState([])
-  const [notification, setNotification] = useState(null)
   const [user, setUser] = useState(null)
   const blogFormRef = useRef()
   const loginFormRef = useRef()
+  const notificationRef = useRef()
 
   useEffect(() => {
     const getAllBlogs = async () => {
@@ -49,20 +50,14 @@ function App () {
       setUser(user)
     } catch (exception) {
       console.log('wrong credentials')
-      setNotification('wrong credentials')
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
+      notificationRef.current.setNotification('wrong credentials', 'error')
     }
   }
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBloglistUser')
     setUser(null)
-    setNotification(`Good by dear ${user.name}`)
-    setTimeout(() => {
-      setNotification(null)
-    }, 5000)
+    notificationRef.current.setNotification(`Good by dear ${user.name}`, 'success')
   }
 
   const createBlog = async (blogObject) => {
@@ -71,17 +66,10 @@ function App () {
       setBlogs(blogs.concat(returnedBlog))
 
       blogFormRef.current.toggleVisibility()
-
-      setNotification(`New blog ${returnedBlog.title} added`)
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
+      notificationRef.current.setNotification(`New blog ${returnedBlog.title} added`, 'success')
     } catch (exception) {
       console.log(exception)
-      setNotification('New blog error')
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
+      notificationRef.current.setNotification('New blog error', 'error')
     }
   }
 
@@ -91,19 +79,13 @@ function App () {
       setBlogs(blogs.filter(blog => blog.id !== blogObject.id))
     } catch (exception) {
       console.log(exception)
-      setNotification('Delete error')
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
+      notificationRef.current.setNotification('Delete error', 'error')
     }
   }
 
   const likeBlog = async (blogObject) => {
     if (user === null) {
-      setNotification('You must be logged to like')
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
+      notificationRef.current.setNotification('You must be logged to like', 'error')
       return
     }
     try {
@@ -111,17 +93,14 @@ function App () {
       setBlogs(blogs.map(blog => blog.id !== returnedBlog.id ? blog : returnedBlog))
     } catch (exception) {
       console.log(exception)
-      setNotification('Like error')
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
+      notificationRef.current.setNotification('Like error', 'error')
     }
   }
 
   return (
     <>
       {/* notification area */}
-      {notification !== null && <div>{notification}</div>}
+      <Notification message={null} type={null} ref={notificationRef} />
 
       {/* login area */}
       {user !== null && <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>}

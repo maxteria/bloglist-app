@@ -22,7 +22,7 @@ const Blog = ({ blog, like, deleteBlog, user }) => {
   }
 
   return (
-    <div style={blogStyle} >
+    <div className='blog' style={blogStyle} >
 
       {/* blog tittle and view button */}
       <div className='blog-title' >
